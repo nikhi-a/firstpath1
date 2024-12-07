@@ -1,0 +1,7 @@
+<h1>{{ company.name }}</h1>
+<img src="{{ company.logo.url }}" alt="Logo" style="max-width:200px;">
+<p><strong>Website:</strong> <a href="{{ company.website }}">{{ company.website }}</a></p>
+<p><strong>Description:</strong> {{ company.description }}</p>
+<p><strong>Location:</strong> {{ company.location }}</p>
+<p><strong>Created by:</strong> {{ company.created_by.username }}</p>
+<a href="{% url 'company_edit' company.pk %}">Edit Company</a>

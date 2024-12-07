@@ -1,4 +1,5 @@
 from django import forms
+from .models import Company
 
 class JobSearchForm(forms.Form):
     title = forms.CharField(max_length=200, required=False, label="Job Title")
@@ -12,3 +13,4 @@ class JobSearchForm(forms.Form):
         
         if 'location' in self.data:
             self.fields['location'].initial = self.data['location']
+

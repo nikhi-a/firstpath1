@@ -1,0 +1,10 @@
+<h1>Companies</h1>
+<ul>
+    {% for company in companies %}
+        <li>
+            <a href="{% url 'company_detail' company.pk %}">{{ company.name }}</a>
+            <p>{{ company.location }}</p>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'company_create' %}">Create a New Company</a>

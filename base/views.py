@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Job
+from .models import Job, Company
 from .search_form import JobSearchForm
+from .forms import CompanyForm  
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -34,3 +36,39 @@ def job_description(request,pk):
     context = {'job1': job1}
     #render the job description HTML template with the job object as context
     return render(request,'base/job_description.html', context)
+
+def company_list(request):
+    companies = Company.objects.all()
+    return render(request, 'base/company_list.html', {'companies': companies})
+
+def company_detail(request, pk):
+    company = get_object_or_404(Company, pk=pk)
+    return render(request, 'base/company_detail.html', {'company': company})
+
+@login_required
+def company_create(request):
+    if request.method == "POST":
+        form = CompanyForm(request.POST, request.FILES)
+        if form.is_valid():
+            company = form.save(commit=False)
+            company.created_by = request.user
+            company.save()
+            return redirect('base/company_detail', pk=company.pk)
+    else:
+        form = CompanyForm()
+    return render(request, 'base/company_form.html', {'form': form})
+
+@login_required
+def company_edit(request, pk):
+    company = get_object_or_404(Company, pk=pk)
+    if request.method == "POST":
+        form = CompanyForm(request.POST, request.FILES, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('base/company_detail', pk=company.pk)
+    else:
+        form = CompanyForm(instance=company)
+    return render(request, 'base/company_form.html', {'form': form})
+
+def custom_login(request):
+    return render(request, 'login.html')
